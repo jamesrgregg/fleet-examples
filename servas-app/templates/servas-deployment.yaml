@@ -15,9 +15,9 @@ spec:
       containers:
         - name: servas
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          securityContext:
-            runAsUser: 1000 # Reference Kubernetes docs
-            runAsGroup: 3000 # Configure a Security Context for a Pod or Container
+          # securityContext:
+          #   runAsUser: 1000 # Reference Kubernetes docs
+          #   runAsGroup: 3000 # Configure a Security Context for a Pod or Container
           ports:
             - containerPort: 80
           volumeMounts:

@@ -107,3 +107,11 @@ apiVersion: apps/v1
 Proposed Fix:
  - Need to separate the deployments - frontend / backend just like the guestbook app.
 
+4. Cleanup and redeploy on fresh minikube with all extra resources deleted and clean install of Fleet
+`kubectl get gitrepos -A`
+
+```
+NAMESPACE     NAME         REPO                                            COMMIT                                     BUNDLEDEPLOYMENTS-READY   STATUS
+fleet-local   servas-app   https://github.com/jamesrgregg/fleet-examples   bd4149bd4ea7e47dd6ec5da76149c0ca28053708   0/1                       NotReady(1) [Cluster fleet-local/local: not installed: YAML parse error on servas-app/templates/db-service.yaml: error converting YAML to JSON: yaml: line 2: mapping values are not allowed in this context]
+```
+

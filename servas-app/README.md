@@ -1,11 +1,17 @@
 ```
-servas-app/
-  ├── Chart.yaml
-  ├── values.yaml
-  └── templates/
-      ├── deployment.yaml
-      ├── service.yaml
-      └── pvc.yaml
+.
+└── servas-app
+    ├── Chart.yaml
+    ├── README.md
+    ├── templates
+    │   ├── configmap.yaml
+    │   ├── db-deployment.yaml
+    │   ├── db-service.yaml
+    │   ├── pvc.yaml
+    │   ├── secret.yaml
+    │   ├── servas-deployment.yaml
+    │   └── service.yaml
+    └── values.yaml
 ```      
 
 To use Rancher Fleet to deploy the servas-app using the Helm charts, by following these steps:

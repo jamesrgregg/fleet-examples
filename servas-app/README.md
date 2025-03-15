@@ -66,7 +66,9 @@ mysqld: Please consult the Knowledge Base to find out how to run mysqld as root!
 ```
 Proposed fix: 
  - Run as a non-root user by setting `securityContext` in the deployment.yaml
- 
+ Reference: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+
+
  ```
 apiVersion: apps/v1
     kind: Deployment
@@ -94,4 +96,8 @@ apiVersion: apps/v1
  ```
  
 2. GitRepo shows resources limited.
+3. Do not run app and db inside the same pod as this bad practice.  
+
+Proposed Fix:
+ - Need to separate the deployments - frontend / backend just like the guestbook app.
 

@@ -42,4 +42,8 @@ spec:
                 secretKeyRef:
                   name: servas-app-secrets
                   key: DB_DATABASE
+      volumes: # Add this section
+            - name: env-file
+              configMap:
+                name: servas-app-config
         

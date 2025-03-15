@@ -8,7 +8,7 @@ servas-app/
       └── pvc.yaml
 ```      
 
-To use Rancher Fleet to deploy the servas-app using the Helm charts we just created, you need to follow these steps:
+To use Rancher Fleet to deploy the servas-app using the Helm charts, by following these steps:
 
 1. **Create a Git Repository for the Helm Charts:**
    - Push the Helm chart files to a Git repository. Rancher Fleet will use this repository to deploy the application.
@@ -35,23 +35,12 @@ apiVersion: fleet.cattle.io/v1alpha1
 kind: GitRepo
 metadata:
   name: servas-app
-  namespace: fleet-default
+  namespace: fleet-local
 spec:
-  repo: "https://github.com/your-username/your-repo-name.git"  # Replace with your Git repository URL
-  branch: main  # Replace with the branch name where Helm charts are stored
+  repo: https://github.com/jamesrgregg/fleet-examples
+  branch: main
   paths:
-    - "servas-app"  # Path to the Helm chart directory
-  targets:
-    - clusterSelector:
-        matchLabels:
-          environment: production  # Replace with your cluster label
-      helm:
-        releaseName: servas-app
-        values:
-          env:
-            DB_USERNAME: user
-            DB_PASSWORD: password
-            DB_DATABASE: servas
+    - servas-app
 ```
 
 2. **Apply the `GitRepo` Resource:**
@@ -60,9 +49,49 @@ spec:
 ```sh
 kubectl apply -f servas-app-gitrepo.yaml
 ```
+_Note: GitRepo definition is created in fleet-local namespace but the deployment of the application will be found in default namespace._
 
 ### Summary
 
 1. **Push the Helm chart files to a Git repository.**
 2. **Create and apply a Fleet `GitRepo` resource that references your Git repository.**
+
+### Troubleshooting
+1. Fleet is able to get the servas-app image and mariadb image, but the database container crashes.
+The db container shows the following:
+
+```
+mysqld: Please consult the Knowledge Base to find out how to run mysqld as root!
+2025-03-15 18:48:24 0 [ERROR] Aborting
+```
+Proposed fix: 
+ - Run as a non-root user by setting `securityContext` in the deployment.yaml
+ 
+ ```
+apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: mariadb
+    spec:
+      # ... other deployment configurations ...
+      template:
+        spec:
+          containers:
+            - name: mariadb
+              image: mariadb:10.7 # or your desired version
+              # ... other container configurations ...
+              securityContext:
+                runAsUser: 999 # example user id
+                runAsGroup: 999 # example group id
+              volumeMounts:
+                - name: mariadb-data
+                  mountPath: /var/lib/mysql
+          volumes:
+            - name: mariadb-data
+              persistentVolumeClaim:
+                claimName: mariadb-pvc # your persistent volume claim
+
+ ```
+ 
+2. GitRepo shows resources limited.
 

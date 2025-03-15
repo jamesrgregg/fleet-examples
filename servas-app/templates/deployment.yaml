@@ -15,9 +15,6 @@ spec:
       containers:
         - name: servas
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          securityContext:
-            runAsUser: 1000 # Reference Kubernetes docs
-            runAsGroup: 3000 # Configure a Security Context for a Pod or Container
           ports:
             - containerPort: 80
           volumeMounts:
@@ -42,6 +39,9 @@ spec:
                   key: DB_DATABASE
         - name: db
           image: "{{ .Values.dbImage.repository }}:{{ .Values.dbImage.tag }}"
+          securityContext:
+            runAsUser: 1000 # Reference Kubernetes docs
+            runAsGroup: 3000 # Configure a Security Context for a Pod or Container
           command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
           env:
             - name: MARIADB_ROOT_PASSWORD

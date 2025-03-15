@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servas-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: servas-app
+  template:
+    metadata:
+      labels:
+        app: servas-app
+    spec:
+      containers:
+        - name: servas
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: env-file
+              mountPath: /app/.env
+              subPath: .env
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_PASSWORD
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_DATABASE
+        - name: db
+          image: "{{ .Values.dbImage.repository }}:{{ .Values.dbImage.tag }}"
+          command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_PASSWORD
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_USERNAME
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_PASSWORD
+            - name: MARIADB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: servas-app-secrets
+                  key: DB_DATABASE
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: env-file
+          configMap:
+            name: servas-app-config
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: servas-app-pvc

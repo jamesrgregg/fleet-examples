@@ -8,7 +8,7 @@ image:
 dbImage:
   repository: mariadb
   pullPolicy: IfNotPresent
-  tag: 10.7.3
+  tag: 11.7.2
 
 service:
   type: ClusterIP
@@ -21,7 +21,8 @@ dbService:
 env:
   DB_USERNAME: user
   DB_PASSWORD: password
-  DB_DATABASE: servas
+  DB_ROOT_PASSWORD: secret-password
+  DB_DATABASE: dbservas
 
 persistence:
   enabled: true

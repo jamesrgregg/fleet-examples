@@ -25,7 +25,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: servas-app-secrets
-                  key: DB_PASSWORD
+                  key: DB_ROOT_PASSWORD
             - name: MARIADB_USER
               valueFrom:
                 secretKeyRef:

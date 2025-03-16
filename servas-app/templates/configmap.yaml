@@ -6,4 +6,5 @@ data:
   .env: |
     DB_USERNAME={{ .Values.env.DB_USERNAME }}
     DB_PASSWORD={{ .Values.env.DB_PASSWORD }}
+    DB_ROOT_PASSWORD={{ .Values.env.DB_ROOT_PASSWORD }}
     DB_DATABASE={{ .Values.env.DB_DATABASE }}

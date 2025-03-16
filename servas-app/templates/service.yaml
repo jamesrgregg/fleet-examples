@@ -20,4 +20,4 @@ spec:
 #     - port: {{ .Values.dbService.port }}
 #       targetPort: 3306
 #   selector:
-#     app: servas-app
+#     app: servas-app  
